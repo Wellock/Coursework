@@ -1,0 +1,69 @@
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
+#include <stdlib.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#define SIZE 30
+
+task();
+double function(double x);
+
+
+void main()
+
+{
+
+	system("chcp 1251");
+
+	task();
+
+	
+
+}
+
+task()
+{
+	int choice;
+	double x;
+	puts("Что вы хотите?\nНайти значение функции в заданой точке (1)\nТаблица значений функции на интервале (2)\nОпределить монотонность (3)\nНайти х по заданному значению функции (4)\nНайти значение производной в точке (5)");
+	scanf("%i", &choice);
+	switch (choice)
+	{
+		case 1:
+			puts("Введите значение х");
+			scanf("%lf", &x);
+			printf("В данной точке значение функции равно >>> %lf", function(x));
+			break;
+		case 2:
+			puts("Введие начало интервала");
+			float a;
+			scanf("%f", &a);
+			puts("Введие конец интервала");
+			float b;
+			scanf("%f", &b);
+			puts("| Значение х | Значение f(x) |");
+			float g = a;
+			for (int i = 0; i <= SIZE; i++, g += (b - a) / SIZE)
+			{
+				printf("| %10.4g | %13.4g |\n", g, function(g));
+			}
+			break;
+		case 3:
+
+		case 4:
+			puts("Введите значение функции");
+			float a;
+			scanf("%f", &a);
+
+	}
+
+}
+
+double function(double x)
+{
+	double y;
+	if (x < 2) y = (pow(tan(x), -1) - sin(x)) / pow(x, 3);
+	if (x >= 2 && x < 9) y = (exp(cos(x)) * sqrt(pow(x, 2) + 1)) / log(3 + x);
+	if (x >= 9) y = sin(2 * x - 5) / (1 + pow(x, 6));
+	return y;
+}
