@@ -5,7 +5,7 @@
 #include <math.h>
 #define SIZE 30
 
-task();
+menu();
 double function(double x);
 
 
@@ -15,47 +15,83 @@ void main()
 
 	system("chcp 1251");
 
-	task();
+	menu();
 
 	
 
 }
 
-task()
+menu()
 {
-	int choice;
-	double x;
-	puts("Что вы хотите?\nНайти значение функции в заданой точке (1)\nТаблица значений функции на интервале (2)\nОпределить монотонность (3)\nНайти х по заданному значению функции (4)\nНайти значение производной в точке (5)");
-	scanf("%i", &choice);
-	switch (choice)
+	int rep = 1;
+	do
 	{
+		int choice;
+
+		puts("\nЧто вы хотите?\n1. Значение функции в точке\n2. Таблица значений\n3. Поиск максимума/минимума\n4. Поиск Х по Y\n5. Производная в точке\n6. Выход\n");
+		scanf("%i", &choice);
+		switch (choice)
+		{
 		case 1:
+
 			puts("Введите значение х");
+			double x;
 			scanf("%lf", &x);
 			printf("В данной точке значение функции равно >>> %lf", function(x));
 			break;
 		case 2:
-			puts("Введие начало интервала");
+			puts("Введие начало отсчета");
 			float a;
 			scanf("%f", &a);
-			puts("Введие конец интервала");
+			puts("Введие шаг");
 			float b;
 			scanf("%f", &b);
+			puts("Введие количиство отсчетов");
+			int g;
+			scanf("%i", &g);
 			puts("| Значение х | Значение f(x) |");
-			float g = a;
-			for (int i = 0; i <= SIZE; i++, g += (b - a) / SIZE)
+			for (int i = 0; i <= g; i++, a = a + b)
 			{
-				printf("| %10.4g | %13.4g |\n", g, function(g));
+				printf("| %10.4g | %13.4g |\n", a, function(a));
 			}
 			break;
 		case 3:
-
+			puts("Нахождение максимума и минимума");
+			float max = 0.0;
+			float min = 10000000.0;
+			float arg_max_min = 0;
+			for (int i = 0; i <= 100; i++, arg_max_min +=0.1)
+			{
+				if (function(arg_max_min) > max) max = function(arg_max_min);
+				if (function(arg_max_min) < min) min = function(arg_max_min);
+			}
+			printf("Максимум >>> %.3f\nМинимум >>> %.3f\n", max, min);
+			break;
 		case 4:
 			puts("Введите значение функции");
-			float a;
-			scanf("%f", &a);
+			float y;
+			scanf("%f", &y);
+			puts("Насколько точным должно быть значение");
+			float error_rate;
+			scanf("%f", &error_rate);
+			float arg_X = -4.0;
+			for (int i = 0; i < 1000; i++, arg_X+=0.01)
+			{
+				if (function(arg_X) > y - error_rate && function(arg_X) < y + error_rate)
+				{
+					printf("Приблизительное значение аргумента >>> %.4f\n", arg_X);
+					break;
+				}
+				if (error_rate == 0 && function(arg_X) == y)
+				{
+					printf("Значение аргумента >>> %.4f\n", arg_X);
+					break;
+				}
+			}
+			break;
 
-	}
+		}
+	} while (rep == 1);
 
 }
 
