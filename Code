@@ -7,6 +7,11 @@
 
 menu();
 double function(double x);
+void build_tabl(float st, float step, int qua);
+float find_max(float arg);
+float find_min(float arg);
+float approximate_value(float znachY, float error_rate, float nachX);
+double derivative(double x);
 
 
 void main()
@@ -28,7 +33,7 @@ menu()
 	{
 		int choice;
 
-		puts("\nЧто вы хотите?\n1. Значение функции в точке\n2. Таблица значений\n3. Поиск максимума/минимума\n4. Поиск Х по Y\n5. Производная в точке\n6. Выход\n");
+		puts("\nЧто вы хотите?\n1. Значение функции в точке\n2. Таблица значений\n3. Поиск максимума/минимума\n4. Поиск Х по Y\n5. Производная в точке\n0. Выход\n");
 		scanf("%i", &choice);
 		switch (choice)
 		{
@@ -41,33 +46,24 @@ menu()
 			break;
 		case 2:
 			puts("Введие начало отсчета");
-			float a;
-			scanf("%f", &a);
+			float start;
+			scanf("%f", &start);
 			puts("Введие шаг");
-			float b;
-			scanf("%f", &b);
+			float step;
+			scanf("%f", &step);
 			puts("Введие количиство отсчетов");
-			int g;
-			scanf("%i", &g);
-			puts("| Значение х | Значение f(x) |");
-			for (int i = 0; i <= g; i++, a = a + b)
-			{
-				printf("| %10.4g | %13.4g |\n", a, function(a));
-			}
+			int qua;
+			scanf("%i", &qua);
+			build_tabl(start, step, qua);
 			break;
 		case 3:
 			puts("Нахождение максимума и минимума");
-			float max = 0.0;
-			float min = 10000000.0;
+			
 			float arg_max_min = 0;
-			for (int i = 0; i <= 100; i++, arg_max_min +=0.1)
-			{
-				if (function(arg_max_min) > max) max = function(arg_max_min);
-				if (function(arg_max_min) < min) min = function(arg_max_min);
-			}
-			printf("Максимум >>> %.3f\nМинимум >>> %.3f\n", max, min);
+			printf("Максимум >>> %.3f\nМинимум >>> %.3f\n", find_max(arg_max_min), find_min(arg_max_min));
 			break;
 		case 4:
+
 			puts("Введите значение функции");
 			float y;
 			scanf("%f", &y);
@@ -75,22 +71,24 @@ menu()
 			float error_rate;
 			scanf("%f", &error_rate);
 			float arg_X = -4.0;
-			for (int i = 0; i < 1000; i++, arg_X+=0.01)
-			{
-				if (function(arg_X) > y - error_rate && function(arg_X) < y + error_rate)
-				{
-					printf("Приблизительное значение аргумента >>> %.4f\n", arg_X);
-					break;
-				}
-				if (error_rate == 0 && function(arg_X) == y)
-				{
-					printf("Значение аргумента >>> %.4f\n", arg_X);
-					break;
-				}
-			}
+			printf("Значение аргумента примерно равно %8.4f", approximate_value(y, error_rate, arg_X));
 			break;
 
+
+		case 5:
+			puts("Введите значение х");
+			double p;
+			scanf("%lf", &p);
+			printf("Значение производной равно %8.4lf\n", derivative(p));
+			break;
+
+
+		case 0:
+			rep = 0;
+			break;
 		}
+		
+
 	} while (rep == 1);
 
 }
@@ -101,5 +99,59 @@ double function(double x)
 	if (x < 2) y = (pow(tan(x), -1) - sin(x)) / pow(x, 3);
 	if (x >= 2 && x < 9) y = (exp(cos(x)) * sqrt(pow(x, 2) + 1)) / log(3 + x);
 	if (x >= 9) y = sin(2 * x - 5) / (1 + pow(x, 6));
+	return y;
+}
+
+void build_tabl(float st, float step, int qua)
+{
+	puts("| Значение х | Значение f(x) |");
+	for (int i = 0; i < qua; i++, st = st + step)
+	{
+		printf("| %10.4g | %13.4g |\n", st, function(st));
+	}
+}
+
+float find_max(float arg)
+{
+	float max = function(arg);
+	for (int i = 0; i <= 100; i++, arg += 0.1)
+	{
+		if (function(arg) > max) max = function(arg);
+	}
+	return max;
+}
+
+float approximate_value(float znachY, float error_rate, float nachX)
+{
+	for (int i = 0; i < 1000; i++, nachX += 0.01)
+	{
+		if (function(nachX) > znachY - error_rate && function(nachX) < znachY + error_rate)
+		{
+			return nachX;
+			break;
+		}
+		if (error_rate == 0 && function(nachX) == znachY)
+		{
+			return nachX;
+			break;
+		}
+	}
+}
+
+float find_min(float arg)
+{
+	float min = function(arg);
+	for (int i = 0; i <= 100; i++, arg += 0.1)
+	{
+		if (function(arg) < min) min = function(arg);
+	}
+	return min;
+}
+
+
+double derivative(double x)
+{
+	double h = 0.0001;
+	double y = function(x+h)-function(x);
 	return y;
 }
